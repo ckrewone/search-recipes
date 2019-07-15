@@ -77,10 +77,10 @@ const actions = {
 
         });
     },
-    setSearchingRecipes: (context, payload) => {
+    setSearchingRecipe: (context, payload) => {
             context.commit('SET_SEARSHING_RECIPE', payload)
     },
-    deleteSearchingRecipes: (context, payload) => {
+    deleteSearchingRecipe: (context, payload) => {
         context.commit('DELETE_SEARSHING_RECIPE', payload)
     }
 }

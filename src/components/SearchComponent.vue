@@ -5,7 +5,7 @@
         </v-text-field>
         <v-select
                 v-model="select"
-                :items="tes"
+                :items="getIngredietsList"
                 label="Item"
                 @change="onChange"
         ></v-select>
@@ -33,18 +33,18 @@
             ...mapGetters('recipes', ['getIngredietsList', 'getSearchingRecipes']),
         },
         methods: {
-            ...mapActions('recipes', ['setSearchingRecipes', 'deleteSearchingRecipes']),
+            ...mapActions('recipes', ['setSearchingRecipe', 'deleteSearchingRecipe']),
             onKeyUp(event) {
                 if (event.keyCode === 13) {
-                    this.setSearchingRecipes(this.ownItem)
+                    this.setSearchingRecipe(this.ownItem)
                     this.ownItem = ''
                 }
             },
             onChange() {
-                this.setSearchingRecipes(this.searchingItems.push(this.select))
+                this.setSearchingRecipe(this.select)
             },
             onClick(index) {
-                this.deleteSearchingRecipes(index);
+                this.deleteSearchingRecipe(index);
             }
         }
     }

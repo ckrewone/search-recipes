@@ -4,7 +4,7 @@
                     <v-card ripple dark elevation="10" :key="index" height="200" class="white--text">
                         <v-layout>
                             <v-flex xs5>
-                                <v-img :src="item.thumbnail"></v-img>
+                                <v-img :src="item.thumbnail" height="200"></v-img>
                             </v-flex>
                             <v-flex xs7>
                                 <v-card-title primary-title>
