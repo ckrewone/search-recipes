@@ -3,8 +3,8 @@
   <div id="app">
     <v-layout>
       <v-flex xs2/>
-      <v-flex xs8>
-    <img alt="Vue logo" src="./assets/logo.png">
+      <v-flex xs8 pt-3>
+        <v-flex class="display-2 text-sm-left">Search:</v-flex>
     <search-component></search-component>
     <recipes-list></recipes-list>
       </v-flex>

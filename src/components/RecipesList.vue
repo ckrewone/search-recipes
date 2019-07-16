@@ -1,12 +1,12 @@
 <template>
             <v-list>
                 <template v-for="(item, index) in getSearchingRecipes">
-                    <v-card ripple dark elevation="10" :key="index" height="200" class="white--text" v-if="item">
-                        <v-layout >
-                            <v-flex xs3>
-                                <v-img :src="item.thumbnail" height="200" width="200"></v-img>
+                    <v-card ripple :key="index" height="200" v-if="item">
+                        <v-layout>
+                            <v-flex item xs3>
+                                <v-img :src="item.thumbnail" style="max-height: 200px"></v-img>
                             </v-flex>
-                            <v-flex xs9>
+                            <v-flex item xs9>
                                 <v-card-title primary-title>
 
                                     <div>
