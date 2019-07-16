@@ -13,3 +13,4 @@ new Vue({
   store
 }).$mount('#app')
 
+store.dispatch('recipes/updateRecipies')

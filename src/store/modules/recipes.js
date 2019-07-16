@@ -63,8 +63,10 @@ const state = {
 }
 
 const getters = {
-    getAllRecipes: state => state.allRecipes,
-    getSearchingRecipes: state => state.searchingRecipes,
+    getSearchingRecipes: state => {
+        if(!state.searchingRecipes.length && !state.searchingIngredients.length) return state.allRecipes.results
+        else return state.searchingRecipes
+    },
     getIngredietsList: state => {
         return state.ingredietsList
     },
@@ -75,10 +77,15 @@ const getters = {
 
 const actions = {
     updateRecipies: (context) => {
-        axios.get('http://www.recipepuppy.com/api/').then(res => {
+        axios.get('http://www.recipepuppy.com/api/', {
+            headers: {
+                "X-Content-Type-Options": "nosniff",
+                'Access-Control-Allow-Origin': "*"
+            }
+        }).then(res => {
             context.commit('UPDATE_RECIPES', res)
-            context.commit('UPDATE_RECIPIES')
-        });
+        }).catch(er => console.log(er));
+        context.commit('UPDATE_INGREDIENTS_LIST')
     },
     setSearchingIngredient: (context, payload) => {
         context.commit('SET_SEARCHING_INGREDIENT', payload)
@@ -96,10 +103,13 @@ const mutations = {
     UPDATE_RECIPES: (state, payload) => {
         state.allRecipes = payload
     },
-    UPDATE_RECIPIES: (state) => {
-        state.ingredietsList = state.allRecipes.results.map(recipe => {
+    UPDATE_INGREDIENTS_LIST: (state) => {
+        const temp  = state.allRecipes.results.map(recipe => {
             return recipe.ingredients
-        }) || []
+        }).join(', ').split(', ')
+        state.ingredietsList = temp.filter((el, i) => {
+            return temp.indexOf(el) == i
+        })
     },
     SET_SEARCHING_INGREDIENT: (state, payload) => {
         state.searchingIngredients.push(payload)
@@ -107,16 +117,17 @@ const mutations = {
     DELETE_INGREDIENT_RECIPE: (state, payload) => {
         state.searchingIngredients.splice(payload, 1);
     },
-    UPDATE_SEARSHING_RECIPES: (state, payload) => {
+    UPDATE_SEARSHING_RECIPES: (state) => {
         if (state.searchingRecipes.length === 0 && state.searchingIngredients.length) {
             state.searchingRecipes = state.allRecipes.results
         }
 
         if(state.searchingIngredients.length) {
             state.searchingIngredients.forEach(ingedient => {
-                const found = state.searchingRecipes ? state.searchingRecipes.find(el => el.ingredients.includes(ingedient)) : []
+                const found = state.searchingRecipes ? state.searchingRecipes.filter(el => el.ingredients.includes(ingedient)) : []
+                console.log(found)
                 if (found !== undefined) {
-                    state.searchingRecipes = typeof found === 'object' ? [found] : found
+                    state.searchingRecipes = typeof found.length === undefined ? [found] : found
                 } else {
                     state.searchingRecipes = []
                 }

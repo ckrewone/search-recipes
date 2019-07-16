@@ -22,7 +22,6 @@ export default {
   components: {
     SearchComponent,
     RecipesList
-
   }
 }
 </script>
