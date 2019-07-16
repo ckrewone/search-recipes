@@ -10,7 +10,7 @@
                 @change="onChange"
         ></v-select>
         <v-flex>
-            <template v-for="(key, index) in getSearchingRecipes">
+            <template v-for="(key, index) in getSearchingIngredients">
                 <v-btn :key="index" @click="onClick(index)">{{key}}</v-btn>
             </template>
         </v-flex>
@@ -30,21 +30,21 @@
             }
         },
         computed: {
-            ...mapGetters('recipes', ['getIngredietsList', 'getSearchingRecipes']),
+            ...mapGetters('recipes', ['getIngredietsList', 'getSearchingIngredients']),
         },
         methods: {
-            ...mapActions('recipes', ['setSearchingRecipe', 'deleteSearchingRecipe']),
+            ...mapActions('recipes', ['setSearchingIngredient', 'deleteSearchingIngredient']),
             onKeyUp(event) {
                 if (event.keyCode === 13) {
-                    this.setSearchingRecipe(this.ownItem)
+                    this.setSearchingIngredient(this.ownItem)
                     this.ownItem = ''
                 }
             },
             onChange() {
-                this.setSearchingRecipe(this.select)
+                this.setSearchingIngredient(this.select)
             },
             onClick(index) {
-                this.deleteSearchingRecipe(index);
+                this.deleteSearchingIngredient(index);
             }
         }
     }

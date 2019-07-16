@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const state = {
-    recipes : JSON.parse(JSON.stringify({
+    allRecipes: JSON.parse(JSON.stringify({
         "title": "Recipe Puppy",
         "version": 0.1,
         "href": "http://www.recipepuppy.com/",
@@ -57,15 +57,19 @@ const state = {
             "thumbnail": "http://img.recipepuppy.com/10.jpg"
         }]
     })),
-    ingredietsList: ["barbecue sauce", "chicken", "cilantro", "lettuce", "ranch dressing", "lettuce", "tomato"],
+    ingredietsList: ["barbecue sauce", "chicken", "cilantro", "lettuce", "ranch dressing", "lettuce", "tomato", 'dupa'],
+    searchingIngredients: [],
     searchingRecipes: []
 }
 
 const getters = {
-    getAllRecipes: state => state.recipes,
+    getAllRecipes: state => state.allRecipes,
     getSearchingRecipes: state => state.searchingRecipes,
     getIngredietsList: state => {
         return state.ingredietsList
+    },
+    getSearchingIngredients: state => {
+        return state.searchingIngredients
     },
 }
 
@@ -74,30 +78,46 @@ const actions = {
         axios.get('http://www.recipepuppy.com/api/').then(res => {
             context.commit('UPDATE_RECIPES', res)
             context.commit('UPDATE_RECIPIES')
-
         });
     },
-    setSearchingRecipe: (context, payload) => {
-            context.commit('SET_SEARSHING_RECIPE', payload)
+    setSearchingIngredient: (context, payload) => {
+        context.commit('SET_SEARCHING_INGREDIENT', payload)
+        context.commit('UPDATE_SEARSHING_RECIPES', payload)
     },
-    deleteSearchingRecipe: (context, payload) => {
-        context.commit('DELETE_SEARSHING_RECIPE', payload)
+    deleteSearchingIngredient: (context, payload) => {
+        context.commit('DELETE_INGREDIENT_RECIPE', payload)
+        context.commit('UPDATE_SEARSHING_RECIPES', payload)
+    },
+    addSearshingRecipe: (context, payload) => {
+        context.commit('UPDATE_SEARSHING_RECIPES', payload)
     }
 }
 const mutations = {
     UPDATE_RECIPES: (state, payload) => {
-        state.recipes = payload
+        state.allRecipes = payload
     },
     UPDATE_RECIPIES: (state) => {
-        state.ingredietsList = state.recipes.results.map(recipe => {
+        state.ingredietsList = state.allRecipes.results.map(recipe => {
             return recipe.ingredients
         }) || []
     },
-    SET_SEARSHING_RECIPE: (state, payload) => {
-        state.searchingRecipes.push(payload)
+    SET_SEARCHING_INGREDIENT: (state, payload) => {
+        state.searchingIngredients.push(payload)
     },
-    DELETE_SEARSHING_RECIPE: (state, payload) => {
-        state.searchingRecipes.splice(payload, 1);
+    DELETE_INGREDIENT_RECIPE: (state, payload) => {
+        state.searchingIngredients.splice(payload, 1);
+    },
+    UPDATE_SEARSHING_RECIPES: (state, payload) => {
+        if (state.searchingRecipes.length === 0 && state.searchingIngredients.length) {
+            state.searchingRecipes = state.allRecipes.results
+        }
+        state.searchingRecipes = state.searchingRecipes.length ? state.searchingRecipes.find(el => {
+            return el.ingredients.split(',').find(els => {
+                return state.searchingIngredients.find(els) !== undefined
+            }) !== undefined
+        }) : []
+
+        state.searchingRecipes = (state.searchingRecipes === undefined || state.searchingRecipes.length === undefined) ? [state.searchingRecipes] : state.searchingRecipes
     }
 }
 

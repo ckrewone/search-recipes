@@ -1,12 +1,12 @@
 <template>
             <v-list>
-                <template v-for="(item, index) in getAllRecipes.results">
-                    <v-card ripple dark elevation="10" :key="index" height="200" class="white--text">
-                        <v-layout>
-                            <v-flex xs5>
-                                <v-img :src="item.thumbnail" height="200"></v-img>
+                <template v-for="(item, index) in getSearchingRecipes">
+                    <v-card ripple dark elevation="10" :key="index" height="200" class="white--text" v-if="item">
+                        <v-layout >
+                            <v-flex xs3>
+                                <v-img :src="item.thumbnail" height="200" width="200"></v-img>
                             </v-flex>
-                            <v-flex xs7>
+                            <v-flex xs9>
                                 <v-card-title primary-title>
 
                                     <div>
@@ -26,15 +26,12 @@
 </template>
 
 <script>
-    import {mapGetters, mapActions} from 'vuex'
+    import {mapGetters} from 'vuex'
 
     export default {
         name: "RecipesList",
         computed: {
-            ...mapGetters('recipes', ['getAllRecipes', 'getIngredietsList']),
-        },
-        methods: {
-            ...mapActions('recipes', ['updateRecipies'])
+            ...mapGetters('recipes', ['getSearchingRecipes']),
         }
     }
 </script>
