@@ -111,13 +111,19 @@ const mutations = {
         if (state.searchingRecipes.length === 0 && state.searchingIngredients.length) {
             state.searchingRecipes = state.allRecipes.results
         }
-        state.searchingRecipes = state.searchingRecipes.length ? state.searchingRecipes.find(el => {
-            return el.ingredients.split(',').find(els => {
-                return state.searchingIngredients.find(els) !== undefined
-            }) !== undefined
-        }) : []
 
-        state.searchingRecipes = (state.searchingRecipes === undefined || state.searchingRecipes.length === undefined) ? [state.searchingRecipes] : state.searchingRecipes
+        if(state.searchingIngredients.length) {
+            state.searchingIngredients.forEach(ingedient => {
+                const found = state.searchingRecipes ? state.searchingRecipes.find(el => el.ingredients.includes(ingedient)) : []
+                if (found !== undefined) {
+                    state.searchingRecipes = typeof found === 'object' ? [found] : found
+                } else {
+                    state.searchingRecipes = []
+                }
+            })
+        } else {
+            state.searchingRecipes = state.allRecipes.results
+        }
     }
 }
 
