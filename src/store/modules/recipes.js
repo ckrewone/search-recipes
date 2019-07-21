@@ -1,12 +1,7 @@
 import axios from 'axios';
 
 const state = {
-    allRecipes: JSON.parse(JSON.stringify({
-        "title": "Recipe Puppy",
-        "version": 0.1,
-        "href": "http://www.recipepuppy.com/",
-        "results": []
-    })),
+    allRecipes: [],
     ingredietsList: ["barbecue sauce", "chicken", "cilantro", "lettuce", "ranch dressing", "lettuce", "tomato", 'dupa'],
     searchingIngredients: [],
     searchingRecipes: []
@@ -27,22 +22,17 @@ const getters = {
 
 const actions = {
     updateRecipies: (context) => {
-        axios.get('api/', {
-            headers: {
-                "X-Content-Type-Options": "nosniff",
-                'Access-Control-Allow-Origin': "*"
-            }
-        }).then(res => {
+        axios.get('api/').then(res => {
             context.commit('UPDATE_RECIPES', res.data)
+            context.commit('UPDATE_INGREDIENTS_LIST')
         })
-        context.commit('UPDATE_INGREDIENTS_LIST')
     },
     setSearchingIngredient: (context, payload) => {
-        context.commit('SET_SEARCHING_INGREDIENT', payload)
+        context.commit('ADD_SEARCHING_INGREDIENT', payload)
         context.commit('UPDATE_SEARSHING_RECIPES', payload)
     },
     deleteSearchingIngredient: (context, payload) => {
-        context.commit('DELETE_INGREDIENT_RECIPE', payload)
+        context.commit('DELETE_SEARCHING_INGREDIENT', payload)
         context.commit('UPDATE_SEARSHING_RECIPES', payload)
     },
     addSearshingRecipe: (context, payload) => {
@@ -61,20 +51,21 @@ const mutations = {
             return temp.indexOf(el) == i
         })
     },
-    SET_SEARCHING_INGREDIENT: (state, payload) => {
+    ADD_SEARCHING_INGREDIENT: (state, payload) => {
         state.searchingIngredients.push(payload)
     },
-    DELETE_INGREDIENT_RECIPE: (state, payload) => {
-        state.searchingIngredients.splice(payload, 1);
+    DELETE_SEARCHING_INGREDIENT: (state, payload) => {
+        state.searchingIngredients.splice(payload, 1)
     },
-    UPDATE_SEARSHING_RECIPES: (state) => {
+    UPDATE_SEARSHING_RECIPES: (state, isAdded) => {
         if (state.searchingRecipes.length === 0 && state.searchingIngredients.length) {
             state.searchingRecipes = state.allRecipes.results
         }
 
         if(state.searchingIngredients.length) {
+            const recipesList = isAdded ? state.searchingRecipes : state.allRecipes.results
             state.searchingIngredients.forEach(ingedient => {
-                const found = state.searchingRecipes ? state.searchingRecipes.filter(el => el.ingredients.includes(ingedient)) : []
+                const found = recipesList ? recipesList.filter(el => el.ingredients.includes(ingedient)) : []
                 if (found !== undefined) {
                     state.searchingRecipes = typeof found.length === undefined ? [found] : found
                 } else {

@@ -42,6 +42,9 @@
             },
             onChange() {
                 this.setSearchingIngredient(this.select)
+                this.$nextTick(() => {
+                    this.select = ''
+                })
             },
             onClick(index) {
                 this.deleteSearchingIngredient(index);
