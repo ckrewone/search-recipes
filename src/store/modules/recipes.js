@@ -29,14 +29,11 @@ const actions = {
     },
     setSearchingIngredient: (context, payload) => {
         context.commit('ADD_SEARCHING_INGREDIENT', payload)
-        context.commit('UPDATE_SEARSHING_RECIPES', payload)
+        context.commit('UPDATE_SEARSHING_RECIPES', true)
     },
     deleteSearchingIngredient: (context, payload) => {
         context.commit('DELETE_SEARCHING_INGREDIENT', payload)
-        context.commit('UPDATE_SEARSHING_RECIPES', payload)
-    },
-    addSearshingRecipe: (context, payload) => {
-        context.commit('UPDATE_SEARSHING_RECIPES', payload)
+        context.commit('UPDATE_SEARSHING_RECIPES', false)
     }
 }
 const mutations = {

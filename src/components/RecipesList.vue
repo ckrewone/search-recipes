@@ -16,7 +16,7 @@
                                     </div>
                                 </v-card-title>
                                 <v-card-actions>
-                                    <v-btn flat color="white" :href="item.href">source</v-btn>
+                                    <v-btn flat :href="item.href">link</v-btn>
                                 </v-card-actions>
                             </v-flex>
                         </v-layout>
